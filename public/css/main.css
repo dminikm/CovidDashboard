@@ -1,0 +1,19 @@
+@import "./navbar.css";
+@import "./content.css";
+@import "./map.css";
+
+html, body {
+    display: flex;
+    flex-direction: column;
+
+    max-width: 100%;
+    width: 100vw;
+
+    max-height: 100%;
+    height: 100vh;
+
+    margin: 0px;
+    padding: 0px;
+
+    flex: 1 100%;
+}
