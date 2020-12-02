@@ -11,7 +11,7 @@ var p = new Proxy({
     "proxyHeaderIdentifier": "proxy-cache-playback",
     "proxyTimeout": 500000,
     "deleteCookieDomain": true,
-    "overrideCors": "localhost:8080",
+    "overrideCors": "*",
     "useCorsCredentials": true
 });
 

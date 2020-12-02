@@ -1,4 +1,5 @@
-import { LeafletMap } from "./types/leaflet";
+import { LeafletMap } from './types/leaflet';
+import countries from './countries';
 
 interface MapInfo {
     element: HTMLDivElement,
@@ -73,7 +74,7 @@ class MapController {
             this.markerContainer.appendChild(elem);
 
             // DEBUG: add marker to original map
-            window.L.marker(marker as any).addTo(this.map);
+            //window.L.marker(marker as any).addTo(this.map);
         }
 
         // Finally push to the array
@@ -107,7 +108,34 @@ const setupMap = () => {
     return new MapController(parent);
 };
 
-window.addEventListener('load', () => {
+// TODO: Parse the data to an interface
+const fetchSummary = async () => {
+    const response = await fetch('http://localhost:3002/summary', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    //const body = await response.text();
+    const body = await response.json();
+    console.dir(body);
+
+    return body;
+};
+
+window.addEventListener('load', async () => {
     var map = setupMap();
-    map.addMarker(new MapMarker(46.82, 8.23));
+
+    let summary = await fetchSummary();
+    summary['Countries'].forEach((country: any) => {
+        try {
+            const code = country['CountryCode'];
+            const position = countries[code.toUpperCase()] as [number, number];
+    
+            map.addMarker(new MapMarker(position[0], position[1]));
+        } catch {
+            console.dir(country);
+        }
+    });
 });
