@@ -1,5 +1,5 @@
 import { LeafletMap } from './types/leaflet';
-import countries from './countries';
+import countries, { countryNames } from './countries';
 
 interface MapInfo {
     element: HTMLDivElement,
@@ -49,6 +49,12 @@ class MapController {
             // Show them again after zoom ends
             this.map.on('zoomend', this.updateMarkers.bind(this));
         }.bind(this));
+
+        this.unTabindex(this.element);
+    }
+
+    public moveTo(x: [number, number], zoom: number) {
+        this.map.setView(x, zoom);
     }
 
     private createMarkerElement(marker: MapMarker) {
@@ -96,6 +102,16 @@ class MapController {
         }
     }
 
+    //TODO: Is this necessary?
+    private unTabindex(el: HTMLElement) {
+        try {
+            el.setAttribute('tabindex', '-1');
+            el.childNodes.forEach((element) => {
+                this.unTabindex(element as HTMLElement);
+            });
+        } catch {}
+    }
+
     private element: HTMLDivElement;
     private markerContainer: HTMLDivElement;
     private map: LeafletMap;
@@ -124,8 +140,63 @@ const fetchSummary = async () => {
     return body;
 };
 
+// TODO: Everything
+const setupSearch = (map: MapController) => {
+    let searchInput = document.querySelector('.navbar-searchbar-container-inner > input[type="text"]') as HTMLInputElement;
+    let searchSuggestionContainer = document.querySelector('.navbar-searchbar-suggestion-container') as HTMLDivElement;
+
+    const submit = () => {
+        const value = searchInput.value.trim();
+        searchInput.value = '';
+
+        var matchingCountries = Object.entries(countryNames).filter(([code, name]) => code.toLowerCase().startsWith(value.toLowerCase()) || name.toLowerCase().startsWith(value.toLowerCase()));
+
+        if (matchingCountries.length != 0) {
+            const matchingCountryCode = matchingCountries[0][0];
+            const pos = countries[matchingCountryCode] || [0, 0];
+            map.moveTo(pos, 6);
+        }
+    };
+
+    // TODO: Suggestions
+    const onChange = (e: Event) => {
+        if (e instanceof KeyboardEvent && e.key === 'Enter') {
+            submit();
+        } else {
+            const value = searchInput.value.trim();
+            var matchingCountries = Object.entries(countryNames).filter(([code, name]) => code.toLowerCase().startsWith(value.toLowerCase()) || name.toLowerCase().startsWith(value.toLowerCase()));
+
+            var newHTML = matchingCountries
+                .map(([code, name]) => `<a class="navbar-searchbar-item" data-country-code=${code} tabindex="1">${name}</a>`)
+                .slice(0, Math.min(matchingCountries.length, 25))
+                .join('');
+
+            searchSuggestionContainer.innerHTML = newHTML;
+
+            // TODO: Mousedown is ugly, but fires before searchbar loses focus
+            searchSuggestionContainer.childNodes.forEach((x) => x.addEventListener('mousedown', (e) => {
+                // TODO: Massive hack
+                searchInput.value = (x as HTMLDivElement).getAttribute('data-country-code') || '_';
+                submit();
+            }));
+        }
+    };
+
+    searchInput.addEventListener('keyup', onChange);
+    searchInput.addEventListener('focus', onChange);
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+            (searchSuggestionContainer.firstChild as HTMLElement).focus();
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        }
+    });
+}
+
 window.addEventListener('load', async () => {
     var map = setupMap();
+    setupSearch(map);
 
     let summary = await fetchSummary();
     summary['Countries'].forEach((country: any) => {
