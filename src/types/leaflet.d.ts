@@ -48,6 +48,7 @@ export interface LeafletMap {
 
     getBounds(): LatLngBounds;
     getSize(): LeafletPoint;
+    getZoom(): number;
 
     latLngToContainerPoint: (latLng: [number, number]) => LeafletPoint;
     latLngToContainerPoint: (latLng: LatLng) => LeafletPoint;

@@ -71,10 +71,11 @@
 }
 
 .navbar-searchbar-suggestion-container {
-    display: none;
+    display: flex;
     flex-direction: column;
 
     width: 100%;
+    max-height: 0px;
 }
 
 .navbar-searchbar-item {
@@ -92,10 +93,9 @@
     padding-left: 15px;
 }
 
-.navbar-searchbar-suggestion-container:focus-within {
-    display: flex;
-}
-
+.navbar-searchbar-suggestion-container:focus-within,
+.navbar-searchbar-suggestion-container:active,
+.navbar-searchbar-suggestion-container:hover,
 #searchbar-input:focus + .navbar-searchbar-suggestion-container {
-    display: flex;
+    max-height: none;
 }
