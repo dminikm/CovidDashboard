@@ -41,25 +41,6 @@
             <div class="content-sidebar-container content-sidebar-container-closed" id="content-sidebar-container">
                 <div class="sidebar-opener">&lt;&lt;</div>
                 <div class="sidebar"></div>
-
-                <script>
-                    let elem = document.querySelector('#content-sidebar-container');
-                    let opener = elem.querySelector('.sidebar-opener');
-
-                    opener.addEventListener('click', () => {
-                        if (elem.classList.contains('content-sidebar-container-open')) {
-                            elem.classList.remove('content-sidebar-container-open');
-                            elem.classList.add('content-sidebar-container-closed');
-
-                            opener.innerText = '<<';
-                        } else {
-                            elem.classList.remove('content-sidebar-container-closed');
-                            elem.classList.add('content-sidebar-container-open');
-
-                            opener.innerText = '>>';
-                        }
-                    });
-                </script>
             </div>
         </main>
 

@@ -17,6 +17,18 @@ export class MapMarker {
 
     public associateElement(elem?: HTMLDivElement) {
         this.element = elem;
+        return this;
+    }
+
+    public addClickListener(fn: (e: MouseEvent) => void) {
+        this.onClick = fn;
+
+        return this;
+    }
+
+    public bindListener() {
+        this.element?.addEventListener('click', (this.onClick || (() => {})).bind(this));
+        return this;
     }
 
     public lng: number;
@@ -24,6 +36,7 @@ export class MapMarker {
     public radius: number;
 
     public element?: HTMLDivElement;
+    public onClick?: (e: MouseEvent) => void;
 }
 
 export class MapController {
@@ -76,7 +89,9 @@ export class MapController {
         // Add an element for this marker
         if (!marker.element) {
             const elem = this.createMarkerElement(marker);
-            marker.associateElement(elem);
+            marker
+                .associateElement(elem)
+                .bindListener();
 
             // Push to container
             this.markerContainer.appendChild(elem);
