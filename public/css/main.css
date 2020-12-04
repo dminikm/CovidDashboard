@@ -1,6 +1,7 @@
 @import "./navbar.css";
 @import "./content.css";
 @import "./map.css";
+@import "./tooltip.css";
 
 html, body {
     display: flex;

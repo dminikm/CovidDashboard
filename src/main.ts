@@ -1,18 +1,21 @@
-import { LeafletMap } from './types/leaflet';
-import countries, { countryNames } from './countries';
-import { CovidSummaryDecoder, CovidSummary } from './data/summary';
-import { isRight } from 'fp-ts/Either';
-import { isLeft } from 'fp-ts/lib/These';
-import setupMap, { MapController, MapMarker } from './map';
+import countries from './countries';
+import setupMap, { MapMarker } from './map';
 import setupSearch from './search';
-import { array } from 'io-ts';
 import APIController from './api';
 import setupSidebar from './sidebar';
+import setupTooltips, { CountryTooltip } from './tooltip';
 
 window.addEventListener('load', async () => {
+    // Get elements
+    const sidebarContainer = document.querySelector('#content-sidebar-container')! as HTMLDivElement;
+    const mapContainer = document.querySelector('.content-map-container')! as HTMLDivElement;
+    const mapElement = mapContainer.querySelector('.content-map')! as HTMLDivElement;
+    const markerContainer = mapContainer.querySelector('.content-marker-container')! as HTMLDivElement;
+
     // Setup app
-    let map = setupMap(document.querySelector('.content-map-container')! as HTMLDivElement);
-    let sidebar = setupSidebar(document.querySelector('#content-sidebar-container')! as HTMLDivElement);
+    let tooltip = setupTooltips(markerContainer);
+    let map = setupMap(tooltip, mapElement, markerContainer);
+    let sidebar = setupSidebar(sidebarContainer);
     setupSearch(map);
 
     const api = new APIController();
@@ -26,15 +29,13 @@ window.addEventListener('load', async () => {
             const code = country.CountryCode;
             const position = countries[code.toUpperCase()] as [number, number];
     
-            map.addMarker(new MapMarker(
-                position[0],
-                position[1],
-                (country.TotalConfirmed - minCases) / (maxCases - minCases) * 50
-            ).addClickListener(() => {
-                // TODO: Add sidebar controller
-                // For now, we just toggle it
-                sidebar.open();
-            }));
+            const markerRadius = (country.TotalConfirmed - minCases) / (maxCases - minCases) * 50
+
+            const marker = new MapMarker(position[0], position[1], markerRadius)
+                .addClickListener(sidebar.open.bind(sidebar))
+                .addTooltip(new CountryTooltip(country));
+
+            map.addMarker(marker);
         } catch {
             console.dir(country);
         }

@@ -1,3 +1,4 @@
+import { Tooltip, TooltipController } from "./tooltip";
 import { LeafletMap } from "./types/leaflet";
 
 export interface MapInfo {
@@ -20,14 +21,26 @@ export class MapMarker {
         return this;
     }
 
-    public addClickListener(fn: (e: MouseEvent) => void) {
-        this.onClick = fn;
-
+    public addTooltip(tip?: Tooltip) {
+        this.tooltip = tip;
         return this;
     }
 
-    public bindListener() {
+    public addClickListener(fn?: (e: MouseEvent) => void) {
+        this.onClick = fn;
+        return this;
+    }
+
+    public bindListeners(tooltip: TooltipController) {
         this.element?.addEventListener('click', (this.onClick || (() => {})).bind(this));
+
+        // Show tooltip on mouse-over
+        this.element?.addEventListener('mouseover', () => {
+            tooltip.setContent(this.tooltip!);
+            tooltip.show();
+        });
+        this.element?.addEventListener('mouseout', tooltip.hide.bind(tooltip));
+
         return this;
     }
 
@@ -37,12 +50,13 @@ export class MapMarker {
 
     public element?: HTMLDivElement;
     public onClick?: (e: MouseEvent) => void;
+    public tooltip?: Tooltip;
 }
 
 export class MapController {
-    constructor(parent: HTMLDivElement) {
-        this.element = parent.querySelector('.content-map')! as HTMLDivElement;
-        this.markerContainer = parent?.querySelector('.content-marker-container')! as HTMLDivElement;
+    constructor(tooltip: TooltipController, mapElement: HTMLDivElement, markerContainer: HTMLDivElement) {
+        this.element = mapElement;
+        this.markerContainer = markerContainer;
 
         this.map = window.L.map(this.element).setView([51.505, -0.09], 13);
         window.L.tileLayer('http://localhost:3001/{z}/{x}/{y}.png', {
@@ -66,6 +80,8 @@ export class MapController {
         });
         
         this.unTabindex(this.element);
+
+        this.tooltip = tooltip;
     }
 
     public moveTo(x: [number, number], zoom: number) {
@@ -91,7 +107,7 @@ export class MapController {
             const elem = this.createMarkerElement(marker);
             marker
                 .associateElement(elem)
-                .bindListener();
+                .bindListeners(this.tooltip);
 
             // Push to container
             this.markerContainer.appendChild(elem);
@@ -142,10 +158,11 @@ export class MapController {
     private map: LeafletMap;
 
     private markers: MapMarker[];
+    private tooltip: TooltipController;
 }
 
-const setupMap = (parent: HTMLDivElement) => {
-    return new MapController(parent);
+const setupMap = (tooltip: TooltipController, mapElement: HTMLDivElement, markerContainer: HTMLDivElement) => {
+    return new MapController(tooltip, mapElement, markerContainer);
 };
 
 export default setupMap;
