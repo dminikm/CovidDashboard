@@ -43,6 +43,10 @@ export interface LeafletPoint {
     y: number
 }
 
+interface LeafletControl {
+
+}
+
 export interface LeafletMap {
     setView: (pos: [number, number], number, options?: any) => LeafletMap;
 
@@ -54,6 +58,9 @@ export interface LeafletMap {
     latLngToContainerPoint: (latLng: LatLng) => LeafletPoint;
 
     on: (evt: string, fn: (e: any) => void) => void;
+
+    removeControl(control: LeafletControl);
+    zoomControl: LeafletControl;
 }
 
 interface LeafletTileLayer {

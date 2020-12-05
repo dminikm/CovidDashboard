@@ -63,8 +63,10 @@ export class MapController {
             attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
             noWrap: true,
             maxZoom: 7,
-            minZoom: 2
+            minZoom: 2,
         }).addTo(this.map);
+
+        this.map.removeControl(this.map.zoomControl);
 
         this.markers = [];
 
