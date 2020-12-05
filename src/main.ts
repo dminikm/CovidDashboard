@@ -1,10 +1,41 @@
 import countries from './countries';
 import setupMap, { MapMarker } from './map';
 import setupSearch from './search';
-import APIController from './api';
-import setupSidebar, { CountrySidebarContent } from './sidebar';
+import setupSidebar, { CountrySidebarContent, GlobalSidebarContent, SidebarContent, SidebarController } from './sidebar';
 import setupTooltips, { CountryTooltip } from './tooltip';
 import api from './api';
+import { CovidSummary } from './data/summary';
+
+const setupGlobalSidebar = (mapElement: HTMLDivElement, sidebar: SidebarController, summary: CovidSummary) => {
+    sidebar.setContent(new GlobalSidebarContent(summary));
+
+    let hasStartedClick = false;
+    let hasMovedMouse = false;
+
+    mapElement.addEventListener('mousedown', () => {
+        hasStartedClick = true;
+        hasMovedMouse = false;
+    });
+
+    mapElement.addEventListener('mousemove', () => {
+        if (!hasStartedClick)
+            return;
+
+        hasMovedMouse = true;
+    })
+
+    mapElement.addEventListener('mouseup', () => {
+        hasStartedClick = false;
+    })
+
+    mapElement.addEventListener('click', () => {
+        if (hasMovedMouse)
+            return;
+
+        sidebar.setContent(new GlobalSidebarContent(summary));
+        sidebar.open();
+    })
+}
 
 window.addEventListener('load', async () => {
     // Get elements
@@ -18,8 +49,9 @@ window.addEventListener('load', async () => {
     let map = setupMap(tooltip, mapElement, markerContainer);
     let sidebar = setupSidebar(sidebarContainer);
     setupSearch(map);
-
+    
     let summary = await api.summary();
+    setupGlobalSidebar(mapElement, sidebar, summary);
 
     let minCases = Math.min(...summary.Countries.map((x) => x.TotalConfirmed));
     let maxCases = Math.max(...summary.Countries.map((x) => x.TotalConfirmed));
@@ -32,7 +64,9 @@ window.addEventListener('load', async () => {
             const markerRadius = (country.TotalConfirmed - minCases) / (maxCases - minCases) * 50;
 
             const marker = new MapMarker(position[0], position[1], markerRadius)
-                .addClickListener(() => {
+                .addClickListener((e: MouseEvent) => {
+                    e.stopPropagation();
+
                     sidebar.setContent(new CountrySidebarContent(country));
                     sidebar.open();
                 })

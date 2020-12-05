@@ -58,7 +58,7 @@ export class MapController {
         this.element = mapElement;
         this.markerContainer = markerContainer;
 
-        this.map = window.L.map(this.element).setView([51.505, -0.09], 13);
+        this.map = window.L.map(this.element).setView([50.05, 15.25], 6);
         window.L.tileLayer('http://localhost:3001/{z}/{x}/{y}.png', {
             attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
             noWrap: true,

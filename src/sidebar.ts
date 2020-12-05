@@ -1,9 +1,66 @@
 import api from "./api";
-import { CovidCountrySummary } from "./data/summary";
+import { CovidCountrySummary, CovidSummary } from "./data/summary";
 
 export interface SidebarContent {
     render(): string;
     onMount(elem: HTMLDivElement): void;
+}
+
+export class GlobalSidebarContent implements SidebarContent {
+    constructor(summary: CovidSummary) {
+        this.summary = summary;
+    }
+
+    public async onMount(elem: HTMLDivElement) {
+        
+    }
+
+    public render() {
+        return `
+            <h1>Global cases</h1>
+            As of: ${new Date(this.summary.Date).toLocaleString()}
+
+            <br><br>
+
+            <table style="width: 80%;">
+                <tbody>
+                    <tr>
+                        <td>Live Cases: </td>
+                        <td style="text-align: right;">${this.summary.Global.TotalConfirmed - (this.summary.Global.TotalDeaths + this.summary.Global.TotalRecovered)}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Cases: </td>
+                        <td style="text-align: right;">${this.summary.Global.TotalConfirmed}</td>
+
+                        <td>&nbsp;&nbsp;</td>
+
+                        <td>New: </td>
+                        <td style="text-align: right;">${this.summary.Global.NewConfirmed}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Deaths:</td>
+                        <td style="text-align: right;">${this.summary.Global.TotalDeaths}</td>
+
+                        <td>&nbsp;&nbsp;</td>
+
+                        <td>New: </td>
+                        <td style="text-align: right;">${this.summary.Global.NewDeaths}</td>
+                    </tr>
+                    <tr>
+                        <td>Total recoveries:</td>
+                        <td style="text-align: right;">${this.summary.Global.TotalRecovered}</td>
+
+                        <td>&nbsp;&nbsp;</td>
+
+                        <td>New: </td>
+                        <td style="text-align: right;">${this.summary.Global.NewRecovered}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
+    }
+
+    private summary: CovidSummary;
 }
 
 export class CountrySidebarContent implements SidebarContent {
@@ -100,7 +157,7 @@ export class CountrySidebarContent implements SidebarContent {
                 <tbody>
                     <tr>
                         <td>Live Cases: </td>
-                        <td style="text-align: right;">${this.summary.TotalConfirmed - this.summary.TotalDeaths - this.summary.TotalRecovered}</td>
+                        <td style="text-align: right;">${this.summary.TotalConfirmed - (this.summary.TotalDeaths + this.summary.TotalRecovered)}</td>
                     </tr>
                     <tr>
                         <td>Total Cases: </td>
@@ -132,14 +189,14 @@ export class CountrySidebarContent implements SidebarContent {
                 </tbody>
             </table>
 
-            <h1>Covid timeline</h1>
+            <h1>Case timeline</h1>
 
             <div>
-                <a href="#" id="sidebar-total-selector"> Total </a> &nbsp;
-                <a href="#" id="sidebar-new-selector"> New </a> &nbsp;
+                <a href="#" id="sidebar-total-selector">Total</a> &nbsp;
+                <a href="#" id="sidebar-new-selector">New</a> &nbsp;
                 | &nbsp;
-                <a href="#" id="sidebar-week-selector"> Week </a> &nbsp;
-                <a href="#" id="sidebar-month-selector"> Month </a>
+                <a href="#" id="sidebar-week-selector">Week</a> &nbsp;
+                <a href="#" id="sidebar-month-selector">Month</a>
             </div> <br>
 
             <canvas width="400" height="300" style="width: 400px; height: 300px;" id="sidebar-canvas"></canvas>

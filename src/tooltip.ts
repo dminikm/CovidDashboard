@@ -70,7 +70,6 @@ export class TooltipController {
         const rect = this.tooltipContainer.getBoundingClientRect();
         const tooltipRect = this.tooltipElement.getBoundingClientRect();
 
-
         const x = Math.max(0, Math.min(rect.width - tooltipRect.width, (e.clientX - rect.x - (tooltipRect.width / 2))));
         const y = Math.max(0, Math.min(rect.height - tooltipRect.height, (e.clientY - rect.y - tooltipRect.height - 15)));
 
