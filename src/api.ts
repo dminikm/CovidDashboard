@@ -1,5 +1,5 @@
 import { isLeft } from "fp-ts/lib/Either";
-import { CovidCountryCasesDecoder } from "./data/country";
+import { CovidCountryCasesByTypeDecoder, CovidCountryCasesDecoder } from "./data/country";
 import { CovidSummaryDecoder } from "./data/summary";
 
 export class APIController {

@@ -19,7 +19,7 @@ export class CountrySidebarContent implements SidebarContent {
         let month = false;
 
         let totalSelector = elem.querySelector('#sidebar-total-selector') as HTMLAnchorElement;
-        let liveSelector = elem.querySelector('#sidebar-live-selector') as HTMLAnchorElement;
+        let newSelector = elem.querySelector('#sidebar-new-selector') as HTMLAnchorElement;
         let weekSelector = elem.querySelector('#sidebar-week-selector') as HTMLAnchorElement;
         let monthSelector = elem.querySelector('#sidebar-month-selector') as HTMLAnchorElement;
 
@@ -34,7 +34,7 @@ export class CountrySidebarContent implements SidebarContent {
             if (total) {
                 this.onShowTotalChart(chart, month);
             } else {
-                this.onShowLivechart(chart, month);
+                this.onShowNewChart(chart, month);
             }
         };
 
@@ -43,19 +43,19 @@ export class CountrySidebarContent implements SidebarContent {
                 return;
 
             totalSelector.classList.add('selected');
-            liveSelector.classList.remove('selected');
+            newSelector.classList.remove('selected');
 
             total = true;
 
             update();
         });
 
-        liveSelector.addEventListener('click', () => {
+        newSelector.addEventListener('click', () => {
             if (!total)
                 return;
 
             totalSelector.classList.remove('selected');
-            liveSelector.classList.add('selected');
+            newSelector.classList.add('selected');
 
             total = false;
 
@@ -136,7 +136,7 @@ export class CountrySidebarContent implements SidebarContent {
 
             <div>
                 <a href="#" id="sidebar-total-selector"> Total </a> &nbsp;
-                <a href="#" id="sidebar-live-selector"> Live </a> &nbsp;
+                <a href="#" id="sidebar-new-selector"> New </a> &nbsp;
                 | &nbsp;
                 <a href="#" id="sidebar-week-selector"> Week </a> &nbsp;
                 <a href="#" id="sidebar-month-selector"> Month </a>
@@ -193,20 +193,76 @@ export class CountrySidebarContent implements SidebarContent {
             backgroundColor: '#00FF0030'
         };
 
+        const activeDatatset = {
+            label: 'Active',
+            data: result.map((x) =>x.Active),
+            backgroundColor: '#0000FF30'
+        }
+
         chart.data = {
             labels: labels,
             datasets: [
                 confirmedDataset,
                 deathDataset,
-                recoveredDataset
+                recoveredDataset,
+                activeDatatset
             ]
         }
 
         chart.update();
     }
 
-    private onShowLivechart(chart: Chart, month: boolean) {
+    private async onShowNewChart(chart: Chart, month: boolean) {
+        const to = new Date();
+        to.setHours(0, 0, 0, 0);
 
+        const from = new Date(to.getTime());
+
+        if (month) {
+            from.setTime(this.subMonthsFromDate(from, 1).getTime());
+            from.setDate(from.getDate() - 1);
+        } else {
+            from.setDate(from.getDate() - 8);
+        }
+
+        const result = await api.byCountry(this.summary.CountryCode, from, to);
+        const labels = result.map((x) => month ? new Date(x.Date).getDate() + '.' + new Date(x.Date).getMonth() : new Date(x.Date).toLocaleString('en-us', {  weekday: 'long' })).slice(1);
+
+        const confirmedDataset = {
+            label: 'Confirmed',
+            data: result.map((x, i, arr) => x.Confirmed - ((arr[i - 1] || {Confirmed: x.Confirmed}).Confirmed)).slice(1),
+            backgroundColor: '#FFFF0030'
+        };
+
+        const deathDataset = {
+            label: 'Deaths',
+            data: result.map((x, i, arr) => x.Deaths - ((arr[i - 1] || {Active: x.Deaths}).Deaths)).slice(1),
+            backgroundColor: '#FF000030'
+        };
+
+        const recoveredDataset = {
+            label: 'Recovered',
+            data: result.map((x, i, arr) => x.Recovered  - ((arr[i - 1] || {Recovered: x.Recovered}).Recovered)).slice(1),
+            backgroundColor: '#00FF0030'
+        };
+
+        const activeDatatset = {
+            label: 'Active',
+            data: result.map((x, i, arr) => x.Active - ((arr[i - 1] || {Active: x.Active}).Active)).slice(1),
+            backgroundColor: '#0000FF30'
+        }
+
+        chart.data = {
+            labels: labels,
+            datasets: [
+                confirmedDataset,
+                deathDataset,
+                recoveredDataset,
+                activeDatatset
+            ]
+        }
+
+        chart.update();
     }
 
     private summary: CovidCountrySummary;
