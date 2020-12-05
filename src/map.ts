@@ -60,7 +60,7 @@ export class MapController {
 
         this.map = window.L.map(this.element).setView([50.05, 15.25], 6);
         window.L.tileLayer('http://localhost:3001/{z}/{x}/{y}.png', {
-            attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+            attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors&nbsp;&nbsp;&nbsp',
             noWrap: true,
             maxZoom: 7,
             minZoom: 2,
