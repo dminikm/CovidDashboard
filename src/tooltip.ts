@@ -11,7 +11,7 @@ export class CountryTooltip implements Tooltip {
 
     public render() {
         return `
-            ${this.summary.Country} <br>
+            ${this.summary.Country} <br><br>
             Total cases: ${this.summary.TotalConfirmed} (+${this.summary.NewConfirmed}) <br>
             Total deaths: ${this.summary.TotalDeaths} (+${this.summary.NewDeaths}) <br>
             Total recovered: ${this.summary.TotalRecovered} (+${this.summary.NewRecovered})
@@ -72,7 +72,7 @@ export class TooltipController {
 
 
         const x = Math.max(0, Math.min(rect.width - tooltipRect.width, (e.clientX - rect.x - (tooltipRect.width / 2))));
-        const y = Math.max(0, Math.min(rect.height - tooltipRect.height, (e.clientY - rect.y - tooltipRect.height)));
+        const y = Math.max(0, Math.min(rect.height - tooltipRect.height, (e.clientY - rect.y - tooltipRect.height - 15)));
 
         this.tooltipElement.style.left = `${x}px`;
         this.tooltipElement.style.top = `${y}px`;

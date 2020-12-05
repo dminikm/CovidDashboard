@@ -49,6 +49,7 @@ class SearchController {
             const matchingCountryCode = matchingCountries[0][0];
             const pos = countries[matchingCountryCode] || [0, 0];
             this.map.moveTo(pos, 6);
+            this.map.getMarker(pos).element!.click();
         }
 
         (document.activeElement as HTMLElement | null)?.blur();
@@ -90,7 +91,6 @@ class SearchController {
     private map: MapController;
 }
 
-// TODO: Everything
 const setupSearch = (map: MapController) => {
     let searchInput = document.querySelector('.navbar-searchbar-container-inner > input[type="text"]') as HTMLInputElement;
     let searchSuggestionContainer = document.querySelector('.navbar-searchbar-suggestion-container') as HTMLDivElement;

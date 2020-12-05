@@ -2,7 +2,7 @@ import countries from './countries';
 import setupMap, { MapMarker } from './map';
 import setupSearch from './search';
 import APIController from './api';
-import setupSidebar from './sidebar';
+import setupSidebar, { CountrySidebarContent } from './sidebar';
 import setupTooltips, { CountryTooltip } from './tooltip';
 
 window.addEventListener('load', async () => {
@@ -21,18 +21,21 @@ window.addEventListener('load', async () => {
     const api = new APIController();
     let summary = await api.summary();
 
-    let minCases = Math.min(...summary!.Countries.map((x) => x.TotalConfirmed));
-    let maxCases = Math.max(...summary!.Countries.map((x) => x.TotalConfirmed));
+    let minCases = Math.min(...summary.Countries.map((x) => x.TotalConfirmed));
+    let maxCases = Math.max(...summary.Countries.map((x) => x.TotalConfirmed));
 
     summary.Countries.forEach((country) => {
         try {
             const code = country.CountryCode;
             const position = countries[code.toUpperCase()] as [number, number];
     
-            const markerRadius = (country.TotalConfirmed - minCases) / (maxCases - minCases) * 50
+            const markerRadius = (country.TotalConfirmed - minCases) / (maxCases - minCases) * 50;
 
             const marker = new MapMarker(position[0], position[1], markerRadius)
-                .addClickListener(sidebar.open.bind(sidebar))
+                .addClickListener(() => {
+                    sidebar.setContent(new CountrySidebarContent(country));
+                    sidebar.open();
+                })
                 .addTooltip(new CountryTooltip(country));
 
             map.addMarker(marker);

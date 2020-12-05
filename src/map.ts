@@ -78,8 +78,6 @@ export class MapController {
         this.map.on('zoomend', () => {
             this.markers.forEach((x) => x.element!.style.display = 'flex');
         });
-        
-        this.unTabindex(this.element);
 
         this.tooltip = tooltip;
     }
@@ -91,9 +89,6 @@ export class MapController {
     private createMarkerElement(marker: MapMarker) {
         const elem = document.createElement('div');
         elem.classList.add('map-marker');
-
-        // TODO: Fill inside
-
         return elem;
     }
 
@@ -111,9 +106,6 @@ export class MapController {
 
             // Push to container
             this.markerContainer.appendChild(elem);
-
-            // DEBUG: add marker to original map
-            //window.L.marker(marker as any).addTo(this.map);
         }
 
         // Finally push to the array
@@ -139,18 +131,20 @@ export class MapController {
         }
     }
 
-    //TODO: Is this necessary?
-    private unTabindex(el: HTMLElement) {
-        try {
-            el.setAttribute('tabindex', '-1');
-            el.childNodes.forEach((element) => {
-                this.unTabindex(element as HTMLElement);
-            });
-        } catch {}
-    }
-
     public getZoom() {
         return this.map.getZoom();
+    }
+
+    // TODO: Find better way
+    public getMarker(position: [number, number]) {
+        return this.markers.reduce((([distance, marker]: [number, MapMarker], current: MapMarker) => {
+            const dist = Math.sqrt(Math.pow(position[0] - current.lat, 2) + Math.pow(position[1] - current.lng, 2));
+            if (dist < distance) {
+                return [dist, current];
+            }
+
+            return [distance, marker];
+        }) as any, [Infinity, this.markers[0]])[1] as MapMarker;
     }
 
     private element: HTMLDivElement;
