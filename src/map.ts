@@ -79,6 +79,7 @@ export class MapController {
         });
         this.map.on('zoomend', () => {
             this.markers.forEach((x) => x.element!.style.display = 'flex');
+            this.updateMarkers();
         });
 
         this.tooltip = tooltip;
