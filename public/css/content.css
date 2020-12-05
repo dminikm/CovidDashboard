@@ -109,3 +109,13 @@
 .sidebar-opener:hover {
     cursor: pointer;
 }
+
+.sidebar-content a {
+    color: blue;
+    text-decoration: underline;
+}
+
+.sidebar-content a.selected {
+    text-decoration: none;
+    color: black;
+}

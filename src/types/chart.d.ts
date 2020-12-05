@@ -35,7 +35,11 @@ interface ChartParams {
 }
 
 declare class Chart {
-    constructor(ctx: CanvasRenderingContext2D, params?: ChartParams)
+    constructor(ctx: CanvasRenderingContext2D, params?: ChartParams);
+    public update(config?: any): void;
+
+    public data: ChartData
+
 }
 
 declare global {
