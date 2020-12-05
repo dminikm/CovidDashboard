@@ -4,6 +4,7 @@ import setupSearch from './search';
 import APIController from './api';
 import setupSidebar, { CountrySidebarContent } from './sidebar';
 import setupTooltips, { CountryTooltip } from './tooltip';
+import api from './api';
 
 window.addEventListener('load', async () => {
     // Get elements
@@ -18,7 +19,6 @@ window.addEventListener('load', async () => {
     let sidebar = setupSidebar(sidebarContainer);
     setupSearch(map);
 
-    const api = new APIController();
     let summary = await api.summary();
 
     let minCases = Math.min(...summary.Countries.map((x) => x.TotalConfirmed));

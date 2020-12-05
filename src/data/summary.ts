@@ -1,4 +1,4 @@
-import { array, Decoder, number, string, Type, type, TypeOf } from 'io-ts';
+import { array, number, string, type, TypeOf } from 'io-ts';
 
 export const CovidGlobalSummaryDecoder = type({
     NewConfirmed: number,
@@ -8,7 +8,6 @@ export const CovidGlobalSummaryDecoder = type({
     NewRecovered: number,
     TotalRecovered: number,
 });
-
 
 export const CovidCountrySummaryDecoder = type({
     Country: string,
