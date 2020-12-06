@@ -3,7 +3,7 @@ import {CovidCountryCasesDecoder} from "./data/country.js";
 import {CovidSummaryDecoder} from "./data/summary.js";
 export class APIController {
   constructor() {
-    this.url = "http://localhost:3002/";
+    this.url = "https://api.covid19api.com/";
   }
   async fetch(endpoint) {
     const response = await fetch(`${this.url}${endpoint}`, {
