@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "fp-ts/lib/Either": "./fp-ts/lib/Either.js",
+    "io-ts": "./io-ts.js"
+  }
+}
