@@ -61,7 +61,8 @@ export class APIController {
         return decodeResult.right;
     }
     
-    private readonly url = 'http://localhost:3002/';
+    //private readonly url = 'http://localhost:3002/';
+    private readonly url = 'https://api.covid19api.com/';
 }
 
 const api = new APIController();

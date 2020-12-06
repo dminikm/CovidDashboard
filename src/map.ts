@@ -58,8 +58,11 @@ export class MapController {
         this.element = mapElement;
         this.markerContainer = markerContainer;
 
+        //const url = 'http://localhost:3001/{z}/{x}/{y}.png';
+        const url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
         this.map = window.L.map(this.element).setView([50.05, 15.25], 6);
-        window.L.tileLayer('http://localhost:3001/{z}/{x}/{y}.png', {
+        window.L.tileLayer(url, {
             attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors&nbsp;&nbsp;&nbsp',
             noWrap: true,
             maxZoom: 7,

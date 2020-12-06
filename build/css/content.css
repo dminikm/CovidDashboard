@@ -1,0 +1,121 @@
+.content-container {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    flex: 1 100%;
+    width: 100%;
+
+    overflow: hidden;
+}
+
+.content-map-container {
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+}
+
+.content-map-container > .content-marker-container {
+    display: flex;
+    flex-direction: column;
+
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+
+    margin: 0px;
+    padding: 0px;
+
+    pointer-events: none;
+
+    z-index: 9999;
+}
+
+.content-map-container > .content-map {
+    width: 100%;
+    height: 100%;
+}
+
+.content-sidebar-container {
+    position: absolute;
+    height: 100%;
+    width: 500px;
+
+    right: 0px;
+    transition: transform 0.2s ease-in-out;
+
+    border-left: 1px solid rgba(0,0,0,0.35);
+    background-color: white;
+
+    z-index: 99999;
+}
+
+.content-sidebar-container-open {
+    transform: translate(0px, 0%);
+}
+
+.content-sidebar-container-closed {
+    transform: translate(490px, 0%);
+}
+
+.sidebar-opener {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    transform: translate(-26px, 75px);
+
+    width: 25px;
+    height: 85px;
+
+    background-color: white;
+
+    border-left: 1px solid rgba(0,0,0,0.35);
+    border-top: 1px solid rgba(0,0,0,0.35);
+    border-bottom: 1px solid rgba(0,0,0,0.35);
+
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+
+    user-select: none;
+}
+
+.sidebar-content {
+    position: relative;
+
+    left: 0;
+    top: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 15px;
+
+    overflow: scroll;
+}
+
+.sidebar-opener:hover {
+    cursor: pointer;
+}
+
+.sidebar-content a {
+    color: blue;
+    text-decoration: underline;
+}
+
+.sidebar-content a.selected {
+    text-decoration: none;
+    color: black;
+}

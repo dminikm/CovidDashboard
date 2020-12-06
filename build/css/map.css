@@ -1,0 +1,11 @@
+.map-marker {
+    display: flex;
+    position: absolute;
+    background-color: red;
+
+    border-radius: 99999px;
+
+    transform: translate(-50%, -50%);
+    pointer-events: all;
+    cursor: pointer;
+}
