@@ -15,11 +15,11 @@ export class GlobalSidebarContent {
             <table style="width: 80%;">
                 <tbody>
                     <tr>
-                        <td>Live Cases: </td>
+                        <td>Active cases: </td>
                         <td style="text-align: right;">${this.summary.Global.TotalConfirmed - (this.summary.Global.TotalDeaths + this.summary.Global.TotalRecovered)}</td>
                     </tr>
                     <tr>
-                        <td>Total Cases: </td>
+                        <td>Total cases: </td>
                         <td style="text-align: right;">${this.summary.Global.TotalConfirmed}</td>
 
                         <td>&nbsp;&nbsp;</td>
@@ -28,7 +28,7 @@ export class GlobalSidebarContent {
                         <td style="text-align: right;">${this.summary.Global.NewConfirmed}</td>
                     </tr>
                     <tr>
-                        <td>Total Deaths:</td>
+                        <td>Total deaths:</td>
                         <td style="text-align: right;">${this.summary.Global.TotalDeaths}</td>
 
                         <td>&nbsp;&nbsp;</td>
@@ -37,7 +37,7 @@ export class GlobalSidebarContent {
                         <td style="text-align: right;">${this.summary.Global.NewDeaths}</td>
                     </tr>
                     <tr>
-                        <td>Total recoveries:</td>
+                        <td>Total recovered:</td>
                         <td style="text-align: right;">${this.summary.Global.TotalRecovered}</td>
 
                         <td>&nbsp;&nbsp;</td>
@@ -119,11 +119,11 @@ export class CountrySidebarContent {
             <table style="width: 80%;">
                 <tbody>
                     <tr>
-                        <td>Live Cases: </td>
+                        <td>Active cases: </td>
                         <td style="text-align: right;">${this.summary.TotalConfirmed - (this.summary.TotalDeaths + this.summary.TotalRecovered)}</td>
                     </tr>
                     <tr>
-                        <td>Total Cases: </td>
+                        <td>Total cases: </td>
                         <td style="text-align: right;">${this.summary.TotalConfirmed}</td>
 
                         <td>&nbsp;&nbsp;</td>
@@ -132,7 +132,7 @@ export class CountrySidebarContent {
                         <td style="text-align: right;">${this.summary.NewConfirmed}</td>
                     </tr>
                     <tr>
-                        <td>Total Deaths:</td>
+                        <td>Total deaths:</td>
                         <td style="text-align: right;">${this.summary.TotalDeaths}</td>
 
                         <td>&nbsp;&nbsp;</td>
@@ -141,7 +141,7 @@ export class CountrySidebarContent {
                         <td style="text-align: right;">${this.summary.NewDeaths}</td>
                     </tr>
                     <tr>
-                        <td>Total recoveries:</td>
+                        <td>Total recovered:</td>
                         <td style="text-align: right;">${this.summary.TotalRecovered}</td>
 
                         <td>&nbsp;&nbsp;</td>
